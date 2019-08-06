@@ -14,16 +14,6 @@ def list(request):
     response = Database.operate('articles', 'scan', '')
     articles = response['Items']
     context = {'articles' : articles}
-    # context = {
-    #     'articles': [
-    #             {
-    #                 'id': '123',
-    #                 'title': 'Testing title',
-    #                 'category': 'Testing category'
-    #             }
-    #     ],
-    # }
-
     return render(request, 'mysite/list.html', context)
 
 def details(request, id=0):
@@ -31,7 +21,8 @@ def details(request, id=0):
     response = table.query(
         KeyConditionExpression=Key('id').eq(id)
     )
-    article = response['Items']
-    print(article)
-    context = {'article' : article[0]}
+    context = {'article' : response['Items'][0]}
     return render(request, 'mysite/detail.html', context)
+
+def save(requset, id=0):
+    return HttpResponseRedirect(reverse('mysite:details', args=(id)))
