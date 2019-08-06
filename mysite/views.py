@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
 from database.dynamodb.database import Database
+from boto3.dynamodb.conditions import Key, Attr
+import boto3
+import botocore
 
 def index(request):
     context = {}
@@ -24,11 +27,11 @@ def list(request):
     return render(request, 'mysite/list.html', context)
 
 def details(request, id=0):
-    context = {
-        'details' : {
-            'id': id,
-            'title': 'Some title',
-            'content': 'Some content',
-        }
-    }
+    table = Database.create_table('articles')
+    response = table.query(
+        KeyConditionExpression=Key('id').eq(id)
+    )
+    article = response['Items']
+    print(article)
+    context = {'article' : article[0]}
     return render(request, 'mysite/detail.html', context)
