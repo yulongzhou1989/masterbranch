@@ -10,7 +10,3 @@ heroku git:remote -a masterbranch1
 git push heroku master
 
 sudo python3 manage.py runserver 5002
-
-
-AKIA2XQX64BLVT5N6O3U
-SDT9eN8MWMFeGoHTlsGXlAOHpc/VxEtk8n2wo/vs
