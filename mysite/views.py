@@ -1,18 +1,13 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
-from database.dynamodb.database import Database
-from boto3.dynamodb.conditions import Key, Attr
-import boto3
-import botocore
 from model import ArticleModel
 #
 # import pprint
 # pp = pprint.PrettyPrinter(depth=6)
 
 def index(request):
-    context = {}
-    return render(request, 'mysite/index.html', context)
+    return render(request, 'mysite/index.html', {})
 
 def list(request, start_from=0):
     articles = ArticleModel.scan(limit=10, last_evaluated_key=start_from)

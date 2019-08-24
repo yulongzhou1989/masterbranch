@@ -1,3 +1,3 @@
-$(document).ready(function() {
-    $('#nav-html').load('/templates/mysite/nav.html');
-});
+function toListPage() {
+  location.href = '/mysite/list/0';
+}

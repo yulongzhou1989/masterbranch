@@ -1,23 +1,30 @@
-rom django.shortcuts import render
+from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
-from database.dynamodb.database import Database
-from boto3.dynamodb.conditions import Key, Attr
-import boto3
-import botocore
+from model import UserModel
+from django.views.decorators.csrf import csrf_protect
 
 
-def login(request):
-    m = Member.objects.get(username=request.POST['username'])
-    if m.password == request.POST['password']:
-        request.session['member_id'] = m.id
-        return HttpResponse("You're logged in.")
+
+def admin_index(request):
+    if request.session.get('user_id'):
+        return render(request, 'admin/dashboard.html', {})
     else:
-        return HttpResponse("Your username and password didn't match.")
+        return render(request, 'admin/login.html', {})
 
-def logout(request):
+@csrf_protect
+def admin_login(request):
+    user = UserModel.query(request.POST['username']).next()
+    print(request.POST['password'])
+    if user.user_passcode == request.POST['password']:
+        request.session['user_id'] = user.user_name
+        return render(request, 'admin/dashboard.html', {})
+    else:
+        return render(request, 'admin/login.html', {'login_status' : 'Failure'})
+
+def admin_logout(request):
     try:
-        del request.session['member_id']
+        del request.session['user_id']
     except KeyError:
         pass
     return HttpResponse("You're logged out.")
