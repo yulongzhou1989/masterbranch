@@ -26,11 +26,15 @@
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
+				{% if err_message %}
+				<p class="login100-form-error">
+					{{ err_message }}
+				</p>
+				{% endif %}
 				<div class="login100-pic js-tilt" data-tilt>
 					<img src="{% static 'admin/asset/images/img-01.png' %}" alt="IMG">
 				</div>
-
-				<form class="login100-form validate-form" action="mysite/login" method="post"> {% csrf_token %}
+				<form class="login100-form validate-form" action="/admin/mysite/login" method="post"> {% csrf_token %}
 					<span class="login100-form-title">
 						Member Login
 					</span>
@@ -56,6 +60,7 @@
 							Login
 						</button>
 					</div>
+
 					<!-- <div class="text-center p-t-12">
 						<span class="txt1">
 							Forgot
@@ -90,7 +95,7 @@
 		})
 	</script>
 <!--===============================================================================================-->
-	<script src="{% static 'admin/assetjs/main.js' %}"></script>
+	<script src="{% static 'admin/asset/js/main.js' %}"></script>
 
 </body>
 </html>

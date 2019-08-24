@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.template import loader
 from model import UserModel
 from django.views.decorators.csrf import csrf_protect
-
+from django.shortcuts import redirect
 
 
 def admin_index(request):
@@ -12,19 +12,26 @@ def admin_index(request):
     else:
         return render(request, 'admin/login.html', {})
 
+
 @csrf_protect
 def admin_login(request):
-    user = UserModel.query(request.POST['username']).next()
-    print(request.POST['password'])
+    #if the user is not existed
+    try:
+        user = UserModel.query(request.POST['username']).next()
+    except:
+        return render(request, 'admin/login.html', {'err_message': 'Wrong username or password!'})
+
     if user.user_passcode == request.POST['password']:
         request.session['user_id'] = user.user_name
-        return render(request, 'admin/dashboard.html', {})
+        return redirect('admin_index')
     else:
-        return render(request, 'admin/login.html', {'login_status' : 'Failure'})
+        return render(request, 'admin/login.html', {'err_message': 'Wrong username or password!'})
+
 
 def admin_logout(request):
     try:
         del request.session['user_id']
     except KeyError:
         pass
-    return HttpResponse("You're logged out.")
+
+    return redirect('admin_index')

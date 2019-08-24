@@ -8,4 +8,5 @@ urlpatterns = [
     path('page/<str:id>', views.details, name="details"),
     path('admin/', admin.admin_index, name="admin_index"),
     path('admin/mysite/login', admin.admin_login, name="admin_login"),
+    path('admin/mysite/logout', admin.admin_logout, name="admin_logout"),
 ]
