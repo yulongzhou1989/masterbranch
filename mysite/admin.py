@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.template import loader
-from model import UserModel
+from model import UserModel, ArticleModel
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import redirect
 
@@ -35,3 +35,8 @@ def admin_logout(request):
         pass
 
     return redirect('admin_index')
+
+
+def admin_list(request, start_from=0):
+    articles = ArticleModel.scan(limit=10, last_evaluated_key=start_from)
+    return render(request, 'admin/list.html', {'articles' : articles})

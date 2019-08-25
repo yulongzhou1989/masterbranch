@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+{% include "admin/head.html" %}
+<body>
+    <div class="wrapper">
+        {% include "admin/sidebar.html" %}
+        <div class="main-panel">
+            <!-- Navbar -->
+            {% include "admin/nav.html" %}
+            <!-- End Navbar -->
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card strpied-tabled-with-hover">
+                                <div class="card-header ">
+                                    <h4 class="card-title">Category</h4>
+                                    <p class="card-category">tags</p>
+                                </div>
+                                <div class="card-body table-full-width table-responsive">
+                                    <table class="table table-hover table-striped">
+                                        <thead>
+                                            <th>ID</th>
+                                            <th>Title</th>
+                                            <th>Category</th>
+                                            <th>Create Time</th>
+                                            <th>Editor</th>
+                                            <th>Tags</th>
+                                        </thead>
+                                        <tbody>
+                                            {% if articles %}
+                                                <ul>
+                                                {% for article in articles %}
+                                                  <tr>
+                                                    <td>{{ article.id }}</td>
+                                                    <td><li><a href="/admin/mysite/page/{{article.id}}">{{ article.title }}</a></li></td>
+                                                    <td>{{ article.category }}</td>
+                                                    <td>{{ article.create_time }}</td>
+                                                    <td>{{ article.editor }}</td>
+                                                    <td>{{ article.tags }}</td>
+                                                  </tr>
+                                                {% endfor %}
+                                                </ul>
+                                            {% else %}
+                                                <p>No contents are available.</p>
+                                            {% endif %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% include "admin/footer.html" %}
+        </div>
+    </div>
+    {% include "admin/fixed_plugin.html" %}
+</body>
+{% include "admin/scripts.html" %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        demo.initBgColor();
+        $(".li-side-list").addClass('active');
+    });
+</script>
+</html>
