@@ -18,7 +18,7 @@
                                 </div>
                                 <div class="card-body">
                                     <form action="/admin/mysite/save" method="post"> {% csrf_token %}
-                                        <input type="text" name="id" value="{% if article %}{{ article.id }}{% endif %}" class="d-none" disabled>
+                                        <input type="text" class="form-control d-none" name="article_id" value="{% if article %}{{ article.id }}{% endif %}">
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
@@ -31,21 +31,21 @@
                                             <div class="col-md-5 pr-1">
                                                 <div class="form-group">
                                                     <label>Category</label>
-                                                    <input type="text" class="form-control" placeholder="Category" value="{% if article %}{{ article.category }}{% endif %}">
+                                                    <input type="text" class="form-control" name="category" placeholder="Category" value="{% if article %}{{ article.category }}{% endif %}">
                                                 </div>
                                             </div>
                                             {% if article %}
                                             <div class="col-md-4 px-1">
                                                 <div class="form-group">
                                                     <label>Create Time</label>
-                                                    <input type="text" class="form-control"  disabled="" value="{{ article.create_time }}">
+                                                    <input type="text" class="form-control"  disabled="" name="create_time" value="{{ article.create_time }}">
                                                 </div>
                                             </div>
                                             {% endif %}
                                             <div class="col-md-3 pl-1">
                                                 <div class="form-group">
-                                                    <label for="exampleInputEmail1">Editor</label>
-                                                    <input type="email" class="form-control"  placeholder="Editor" {% if article %} disabled="" value="{{ article.editor }}" {% else %} value="Yulong" {% endif %} >
+                                                    <label for="editor">Editor</label>
+                                                    <input type="text" id="editor" class="form-control" name="editor" placeholder="Editor" {% if article %} disabled="" value="{{ article.editor }}" {% else %} value="Yulong" {% endif %} >
                                                 </div>
                                             </div>
                                         </div>
@@ -53,7 +53,7 @@
                                             <div class="col-md-8 pr-1">
                                                 <div class="form-group">
                                                     <label>Tags</label>
-                                                    <input type="text" class="form-control" placeholder="Tags" value="{% if article %}{{ article.tags }}{% endif %}">
+                                                    <input type="text" class="form-control" name="tags" placeholder="Tags" value="{% if article %}{{ article.tags }}{% endif %}">
                                                 </div>
                                             </div>
                                         </div>
@@ -61,7 +61,7 @@
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label>Content</label>
-                                                    <textarea rows="4" cols="80" class="form-control" placeholder="Content" value="">{% if article %}{{ article.content | safe }}{% endif %}</textarea>
+                                                    <textarea rows="4" cols="80" class="form-control" name="content" placeholder="Content" value="">{% if article %}{{ article.content | safe }}{% endif %}</textarea>
                                                 </div>
                                             </div>
                                         </div>

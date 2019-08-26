@@ -4,7 +4,8 @@ from django.template import loader
 from model import UserModel, ArticleModel
 from django.views.decorators.csrf import csrf_protect
 from django.shortcuts import redirect
-import uuid, datetime
+import uuid
+from datetime import datetime
 
 
 def admin_index(request):
@@ -41,38 +42,45 @@ def admin_list(request, last_evaluated_key=None):
 
 def admin_page(request, id=None):
     if id:
-        article = ArticleModel.query(id).next();
-        return render(request, 'admin/page.html', {'article': article})
+        try:
+            article = ArticleModel.query(id).next();
+            return render(request, 'admin/page.html', {'article': article})
+        except Exception as e:
+            print(str(e))
     return render(request, 'admin/page.html', {})
 
 @csrf_protect
 def admin_save(request):
-    if request.POST['id']: # update
-        article = ArticleModel(id=request.POST['id'])
+    print(request.POST)
+    if request.POST['article_id']: # update
+        uid = request.POST['article_id']
+        article = ArticleModel(id=request.POST['article_id'],title=request.POST['title'])
         try:
             article.update(
                 actions=[
-                    ArticleModel.title.set(request.POST['title']),
                     ArticleModel.category.set(request.POST['category']),
                     ArticleModel.content.set(request.POST['content']),
                 ],
                 condition=(
-                    (ArticleModel.id == request.POST['id']) | Thread.id.exists()
+                    (ArticleModel.id == request.POST['article_id'])
                 )
             )
-        except e:
+        except Exception as e:
             print(str(e))
     else: # save
-        article = ArticleModel(id=uuid.uuid1(),
+        uid = str(uuid.uuid1())
+        print(request.POST)
+        article = ArticleModel(id=uid,
                                title=request.POST['title'],
                                category=request.POST['category'],
                                content=request.POST['content'],
-                               create_time=datetime.now(),
+                               create_time=str(datetime.now()),
                                editor=request.POST['editor'],
-                               tags=reqeust.post['tags'])
+                               tags=request.POST['tags'])
         try:
-            article.save(ArticleModel.id.does_not_exist())
-        except e:
+            article.save()
+        except Exception as e:
+            print("rrrrrrr")
             print(str(e))
 
-    return render(request, 'admin/page.html', {'article', article})
+    return redirect('admin_page', id=uid)

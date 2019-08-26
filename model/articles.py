@@ -18,4 +18,4 @@ class ArticleModel(Model):
     content = UnicodeAttribute()
     create_time = UnicodeAttribute()
     editor = UnicodeAttribute()
-    tags = UnicodeAttribute()
+    tags = UnicodeAttribute(null=True)
