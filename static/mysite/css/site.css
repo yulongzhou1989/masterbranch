@@ -26,6 +26,10 @@
   background: #fff;
 }
 
+.content_list {
+  padding-bottom: 3em;
+}
+
 .sidebar-box *:last-child {
   margin-bottom: 0;
 }

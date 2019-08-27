@@ -17,13 +17,16 @@
             {% if articles %}
                 <ul>
                 {% for article in articles %}
-                    <li><a href="/mysite/page/{{article.id}}">{{ article.category }} - {{ article.title }}</a></li>
+                    <li><a href="/mysite/page/{{article.id}}">{{ article.title }}</a></li>
                 {% endfor %}
                 </ul>
             {% else %}
                 <p>No contents are available.</p>
             {% endif %}
           </div>
+
+          <!-- pagination -->
+          {% if articles %}
           <div class="pagination-wrapper">
             {% if lek %}
               <input type="text" class="d-none" id="lek_id" name="id" value="{{ lek.id.S }}">
@@ -42,12 +45,12 @@
               </div>
               <div class="little-dot  little-dot--last"></div>
             </div>
-
             <svg class="page_btn btn--next" height="60" viewBox="0 0 24 24" width="96" xmlns="http://www.w3.org/2000/svg">
               <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
               <path d="M0-.25h24v24H0z" fill="none"/>
             </svg>
           </div>
+          {% endif %}
         </div>
         <div class="col-md-12 col-lg-4 sidebar">
           <div class="sidebar-box search-form-wrap">
@@ -129,21 +132,35 @@
   <script type="text/javascript">
     var pagination_stack = [];
     if (pagination_stack.length == 0) {
-      pagination_stack.push({'id': $('#lek_id').val(), 'title': $('#lek_title').val()});
+      if ($('#lek_id').val() == undefined) {
+        $('.pagination-wrapper').addClass('d-none');
+      } else {
+        pagination_stack.push({'id': $('#lek_id').val(), 'title': $('#lek_title').val()});
+        $('.btn--prev').addClass('d-none');
+      }
     }
 
     $('.page_btn').click(function() {
-      var cur_lek = pagination_stack.pop();
-      var pre_lek = {'id': '', 'title': ''}
-      next = true;
-      if ($(this).hasClass('btn--prev') && pagination_stack.length > 0) {
-        pagination_stack.pop();
-        if (pagination_stack.length > 0) {
-          pre_lek = pagination_stack.pop();
+      let lek = {'id': '', 'title': ''};
+      var tmp_stack = [];
+      if ($(this).hasClass('btn--prev')) {
+        for (let i = 0; i < 3; i++) {
+          if (pagination_stack.length >  0) {
+            lek = pagination_stack.pop();
+            if (i == 2) {
+              tmp_stack.push(lek);
+            }
+          } else {
+            lek = {'id': '', 'title': ''}
+            break;
+          }
         }
         next = false;
+      } else {
+        lek = pagination_stack.pop();
+        tmp_stack.push(lek);
       }
-      lek = (next ? cur_lek : pre_lek);
+
       $.ajax (
         {
           type: 'GET',
@@ -151,29 +168,43 @@
           data: {
             lek_id: lek.id,
             lek_title: lek.title,
-            next: next,
           },
           dataType: 'json',
           success: function(data) {
-            generateContentList(data.articles, data.lek, pre_lek, cur_lek, next);
+            generateContentList(data.articles, data.lek, tmp_stack);
           },
         }
       );
     });
 
-    function generateContentList(articles, next_lek, pre_lek, cur_lek, next) {
+    function generateContentList(articles, next_lek, tmp_stack) {
 
-      if (next) {
-        pagination_stack.push(pre_lek);
-        pagination_stack.push(cur_lek);
+      while(tmp_stack.length > 0) {
+        pagination_stack.push(tmp_stack.pop());
+      }
+
+      if (pagination_stack.length == 0) {
+        $('.btn--prev').addClass('d-none');
+      } else {
+        $('.btn--prev').removeClass('d-none');
+      }
+
+      if(next_lek.id == '') {
+        $('.btn--next').addClass('d-none');
+      } else {
+        $('.btn--next').removeClass('d-none');
       }
 
       pagination_stack.push(next_lek);
-      var html="<ul>";
-      $.each(articles, function(i, a){
-        html+="<li><a href='/mysite/page/" + a.HASH + "'>" + a.RANGE + "</a></li>";
-      });
-      html += "</ul>";
+
+      var html="<div class='text-center text-primary lead'>No More Content.</div>";
+      if (articles.length > 0) {
+        html = "<ul>";
+        $.each(articles, function(i, a){
+          html+="<li><a href='/mysite/page/" + a.HASH + "'>" + a.RANGE + "</a></li>";
+        });
+        html += "</ul>";
+      }
       $('.content_list').html(html);
     }
   </script>
