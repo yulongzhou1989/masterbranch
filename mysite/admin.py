@@ -80,7 +80,6 @@ def admin_save(request):
         try:
             article.save()
         except Exception as e:
-            print("rrrrrrr")
             print(str(e))
 
     return redirect('admin_page', id=uid)
