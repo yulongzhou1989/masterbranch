@@ -21,30 +21,31 @@
                                 <div class="card-body table-full-width table-responsive">
                                     <table class="table table-hover table-striped">
                                         <thead>
-                                            <th>ID</th>
                                             <th>Title</th>
                                             <th>Category</th>
                                             <th>Create Time</th>
                                             <th>Editor</th>
                                             <th>Tags</th>
+                                            <th>ID</th>
                                         </thead>
-                                        <tbody>
+                                        <tbody id="admin_content_list">
                                             {% if articles %}
                                                 <ul>
                                                 {% for article in articles %}
                                                   <tr>
-                                                    <td>{{ article.id }}</td>
                                                     <td><li><a href="/admin/mysite/page/{{article.id}}">{{ article.title }}</a></li></td>
                                                     <td>{{ article.category }}</td>
                                                     <td>{{ article.create_time }}</td>
                                                     <td>{{ article.editor }}</td>
                                                     <td>{{ article.tags }}</td>
+                                                    <td>{{ article.id }}</td>
                                                   </tr>
                                                 {% endfor %}
                                                 </ul>
                                             {% else %}
                                                 <p>No contents are available.</p>
                                             {% endif %}
+                                            <div class="clearfix"></div>
                                         </tbody>
                                     </table>
                                 </div>
@@ -52,6 +53,31 @@
                         </div>
                     </div>
                 </div>
+                <!-- {% if articles %} -->
+                <div class="pagination-wrapper">
+                  {% if lek %}
+                    <input type="text" class="d-none" id="lek_id" name="id" value="{{ lek.id.S }}">
+                    <input type="text" class="d-none" id="lek_title" name="title" value="{{ lek.title.S }}">
+                  {% endif %}
+                  <svg class="page_btn btn--prev" height="50" viewBox="0 0 24 24" width="50" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/>
+                    <path d="M0-.5h24v24H0z" fill="none"/>
+                  </svg>
+                  <div class="pagination-container">
+                    <div class="little-dot  little-dot--first"></div>
+                    <div class="little-dot">
+                      <div class="big-dot-container">
+                        <div class="big-dot"></div>
+                      </div>
+                    </div>
+                    <div class="little-dot  little-dot--last"></div>
+                  </div>
+                  <svg class="page_btn btn--next" height="50" viewBox="0 0 24 24" width="50" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/>
+                    <path d="M0-.25h24v24H0z" fill="none"/>
+                  </svg>
+                </div>
+                <!-- {% endif %} -->
             </div>
             {% include "admin/footer.html" %}
         </div>
@@ -64,5 +90,93 @@
         demo.initBgColor();
         $(".li-side-list").addClass('active');
     });
+
+    var pagination_stack = [];
+    if (pagination_stack.length == 0) {
+      if ($('#lek_id').val() == undefined) {
+        $('.pagination-wrapper').addClass('d-none');
+      } else {
+        pagination_stack.push({'id': $('#lek_id').val(), 'title': $('#lek_title').val()});
+        $('.btn--prev').addClass('d-none');
+      }
+    }
+
+    $('.page_btn').click(function() {
+      let lek = {'id': '', 'title': ''};
+      var tmp_stack = [];
+      if ($(this).hasClass('btn--prev')) {
+        for (let i = 0; i < 3; i++) {
+          if (pagination_stack.length >  0) {
+            lek = pagination_stack.pop();
+            if (i == 2) {
+              tmp_stack.push(lek);
+            }
+          } else {
+            lek = {'id': '', 'title': ''}
+            break;
+          }
+        }
+        next = false;
+      } else {
+        lek = pagination_stack.pop();
+        tmp_stack.push(lek);
+      }
+
+      $('#admin_content_list').html("");
+
+      $.ajax (
+        {
+          type: 'GET',
+          url:'/admin/mysite/list_pagination',
+          data: {
+            lek_id: lek.id,
+            lek_title: lek.title,
+          },
+          dataType: 'json',
+          success: function(data) {
+            generateContentList(data.articles, data.lek, tmp_stack);
+          },
+        }
+      );
+    });
+
+    function generateContentList(articles, next_lek, tmp_stack) {
+
+      while(tmp_stack.length > 0) {
+        pagination_stack.push(tmp_stack.pop());
+      }
+
+      if (pagination_stack.length == 0) {
+        $('.btn--prev').addClass('d-none');
+      } else {
+        $('.btn--prev').removeClass('d-none');
+      }
+
+      if(next_lek.id == '') {
+        $('.btn--next').addClass('d-none');
+      } else {
+        $('.btn--next').removeClass('d-none');
+      }
+
+      pagination_stack.push(next_lek);
+
+      var html="";
+      if (articles.length > 0) {
+
+        $.each(articles, function(i, a){
+          console.log(a);
+          html = "<tr>";
+          html+="<td><li><a href='/admin/mysite/page/" + a.id + "'>" + a.title + "</a></li></td>";
+          html+="<td>" + a.category +"</td>";
+          html+="<td>" + a.create_time + "</td>";
+          html+="<td>" + a.editor + "</td>";
+          html+="<td>" + a.tags + "</td>";
+          html+="<td>" + a.id + "</td>";
+          html += "</tr>";
+        });
+
+      }
+      $('#admin_content_list').html(html);
+    }
 </script>
 </html>

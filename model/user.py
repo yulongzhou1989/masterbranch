@@ -1,8 +1,9 @@
 from pynamodb.models import Model
 from pynamodb.attributes import UnicodeAttribute
 import os
+from .base import BaseModel
 
-class UserModel(Model):
+class UserModel(BaseModel):
     """
     A DynamoDB User
     """

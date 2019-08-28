@@ -3,7 +3,7 @@ from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from model import ArticleModel
 
-LIMIT = 1
+LIMIT = 10
 
 def index(request):
     return render(request, 'mysite/index.html', {})

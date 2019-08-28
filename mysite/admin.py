@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from model import UserModel, ArticleModel
 from django.views.decorators.csrf import csrf_protect
@@ -7,6 +7,7 @@ from django.shortcuts import redirect
 import uuid
 from datetime import datetime
 
+PAGE_LIMIT = 10
 
 def admin_index(request):
     if request.session.get('user_id'):
@@ -37,8 +38,37 @@ def admin_logout(request):
     return redirect('admin_index')
 
 def admin_list(request, last_evaluated_key=None):
-    articles = ArticleModel.scan(limit=10, last_evaluated_key=last_evaluated_key)
-    return render(request, 'admin/list.html', {'articles' : articles})
+    articlesItr = ArticleModel.scan(limit=PAGE_LIMIT, last_evaluated_key=last_evaluated_key)
+    articles = []
+    for a in articlesItr:
+        lek = articlesItr.last_evaluated_key
+        articles.append(a)
+    return render(request, 'admin/list.html', {'articles' : articles, 'lek' : lek})
+
+def admin_list_pagination(request):
+
+    if 'lek_id' in request.GET and request.GET['lek_id']:
+        lek = {'id': {'S': request.GET['lek_id']}, 'title': {'S': request.GET['lek_title']}}
+    else:
+        lek = None
+    articlesItr = ArticleModel.scan(limit=PAGE_LIMIT, last_evaluated_key=lek)
+    articles = []
+    next_lek = None
+    for a in articlesItr:
+        next_lek = articlesItr.last_evaluated_key
+        articles.append(a.to_dict())
+
+    if next_lek == None:
+        resp_lek = {'id': '', 'title': ''}
+    else:
+        resp_lek = {'id': next_lek['id']['S'], 'title': next_lek['title']['S']}
+
+    data = {
+        'articles': articles,
+        'lek': resp_lek,
+    }
+
+    return JsonResponse(data)
 
 def admin_page(request, id=None):
     if id:

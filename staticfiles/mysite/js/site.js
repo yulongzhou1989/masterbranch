@@ -1,3 +1,3 @@
 function toListPage() {
-  location.href = '/mysite/list/0';
+  location.href = '/mysite/list/';
 }
