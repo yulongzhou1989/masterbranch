@@ -1,0 +1,73 @@
+{% load static %}
+<div class="col-md-12 col-lg-4 sidebar">
+  <div class="sidebar-box search-form-wrap">
+    <form action="#" class="search-form">
+      <div class="form-group">
+        <input type="text" class="form-control" id="s" placeholder="Type a keyword and hit enter">
+      </div>
+    </form>
+  </div>
+  <!-- END sidebar-box -->
+  <div class="sidebar-box">
+    <h3 class="heading">Categories</h3>
+    {% if cats %}
+    <ul class="categories">
+      {% for cat in cats %}
+      <li><a href="#">{{ cat.category_name }} <span> {% if cat.cnt %} ({{ cat.cnt}}) {% endif %}</span></a></li>
+      {% endfor %}
+    </ul>
+    {% endif %}
+  </div>
+  <!-- END sidebar-box -->
+  <div class="sidebar-box">
+    <h3 class="heading">Tags</h3>
+    <ul class="tags">
+      {% if tags %}
+        {% for tag in tags%}
+        <li><a href="#">{{ tag.tag_name }}</a></li>
+        {% endfor %}
+      {% endif %}
+    </ul>
+  </div>
+  <!-- END sidebar-box -->
+  <div class="sidebar-box">
+    <div class="bio text-center">
+      <img src="/static/mysite/img/avataaars.svg" alt="Image Placeholder" class="img-fluid mb-5">
+      <div class="bio-body">
+        <h2>Yulong Zhou</h2>
+        <p class="mb-4">Stay fool, Stay Hungry</p>
+        <p><a href="#" class="btn btn-primary btn-sm rounded px-4 py-2">View my career</a></p>
+      </div>
+    </div>
+  </div>
+  <!-- END sidebar-box -->
+  <div class="sidebar-box">
+    <h3 class="heading">Popular Posts</h3>
+    <div class="post-entry-sidebar">
+      <ul>
+        <li>
+          <a href="">
+            <div class="text">
+              <h5>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
+              <div class="post-meta">
+                <span class="mr-2">March 15, 2018 </span>
+              </div>
+            </div>
+          </a>
+        </li>
+        <li>
+          <a href="">
+            <div class="text">
+              <h5>There’s a Cool New Way for Men to Wear Socks and Sandals</h4>
+              <div class="post-meta">
+                <span class="mr-2">March 15, 2018 </span>
+              </div>
+            </div>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+</div>
+<!-- END sidebar -->

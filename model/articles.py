@@ -1,7 +1,7 @@
 from pynamodb.models import Model
 from pynamodb.attributes import UnicodeAttribute
 import os
-from .base import BaseModel
+from .meta import BaseModel
 
 class ArticleModel(BaseModel):
     """
