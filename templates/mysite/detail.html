@@ -232,8 +232,15 @@
     </div>
   </section>
   {% include "mysite/footer.html" %}
-
   <script src="{% static 'mysite/vendor/jquery/jquery.min.js' %}"></script>
   <script src="{% static 'mysite/js/site.js' %}"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('pre').each(function(i, block) {
+        hljs.highlightBlock(block);
+      });
+    });
+  </script>
 </body>
 </html>

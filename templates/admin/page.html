@@ -61,7 +61,7 @@
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label>Content</label>
-                                                    <textarea rows="4" cols="80" class="form-control" name="content" placeholder="Content" value="">{% if article %}{{ article.content | safe }}{% endif %}</textarea>
+                                                    <textarea rows="4" id="content" cols="80" class="form-control" name="content" placeholder="Content" value="">{% if article %}{{ article.content | safe }}{% endif %}</textarea>
                                                 </div>
                                             </div>
                                         </div>
@@ -84,6 +84,14 @@
     $(document).ready(function() {
         demo.initBgColor();
         $(".li-side-page").addClass('active');
+    });
+
+    CKEDITOR.replace( 'content' );
+
+    $(document).ready(function() {
+      $('pre').each(function(i, block) {
+        hljs.highlightBlock(block);
+      });
     });
 </script>
 </html>
