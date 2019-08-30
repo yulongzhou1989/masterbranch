@@ -8,7 +8,10 @@ urlpatterns = [
     path('list/', views.list, name='list'),
     path('list/<str:last_evaluated_key>', views.list, name='list'),
     path('list_pagination', views.list_pagination, name='list_pagination'),
-    path('page/<str:id>', views.details, name="details"),
+    path('page/<str:id>', views.page, name="page"),
+    path('list_filter/cat/<str:cat>', views.list_filter_cat, name='list_filter_cat'),
+    path('list_filter/tag/<str:tag>', views.list_filter_tag, name='list_filter_tag'),
+    path('list_filter/keyword', views.list_filter_keyword, name='list_filter_keyword'),
     #admin
     path('admin/', admin.admin_index, name="admin_index"),
     path('admin/mysite/login', admin.admin_login, name="admin_login"),

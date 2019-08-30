@@ -1,9 +1,9 @@
 {% load static %}
 <div class="col-md-12 col-lg-4 sidebar">
   <div class="sidebar-box search-form-wrap">
-    <form action="#" class="search-form">
+    <form action="/list_filter/keyword" class="search-form" method="post"> {% csrf_token %}
       <div class="form-group">
-        <input type="text" class="form-control" id="s" placeholder="Type a keyword and hit enter">
+        <input type="text" class="form-control" id="s" placeholder="Type a keyword and hit enter" name="keyword">
       </div>
     </form>
   </div>
@@ -13,7 +13,7 @@
     {% if cats %}
     <ul class="categories">
       {% for cat in cats %}
-      <li><a href="#">{{ cat.category_name }} <span> {% if cat.cnt %} ({{ cat.cnt}}) {% endif %}</span></a></li>
+      <li><a href="/list_filter/cat/{{ cat.category_name }}">{{ cat.category_name }} <span> {% if cat.cnt %} ({{ cat.cnt}}) {% endif %}</span></a></li>
       {% endfor %}
     </ul>
     {% endif %}
@@ -24,7 +24,7 @@
     <ul class="tags">
       {% if tags %}
         {% for tag in tags%}
-        <li><a href="#">{{ tag.tag_name }}</a></li>
+        <li><a href="/list_filter/tag/{{ tag.tag_name }}">{{ tag.tag_name }}</a></li>
         {% endfor %}
       {% endif %}
     </ul>
@@ -36,11 +36,12 @@
       <div class="bio-body">
         <h2>Yulong Zhou</h2>
         <p class="mb-4">Stay fool, Stay Hungry</p>
-        <p><a href="#" class="btn btn-primary btn-sm rounded px-4 py-2">View my career</a></p>
+        <p><a href="https://www.linkedin.com/in/yulongzhou/" class="btn btn-primary btn-sm rounded px-4 py-2" target="_blank">View me</a></p>
       </div>
     </div>
   </div>
   <!-- END sidebar-box -->
+  {% if recentPost %}
   <div class="sidebar-box">
     <h3 class="heading">Popular Posts</h3>
     <div class="post-entry-sidebar">
@@ -68,6 +69,6 @@
       </ul>
     </div>
   </div>
-
+  {% endif %}
 </div>
 <!-- END sidebar -->

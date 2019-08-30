@@ -6,7 +6,7 @@
   {% include "mysite/nav.html" %}
   <section class="listHead listHead-heading bg-primary text-white text-uppercase mb-0 text-center ">
     <div class="ml-5">
-      blogs
+      <a href="http://localhost:5002/mysite/list/"><div class="ml-4 text-white">blogs</div></a>
     </div>
   </section>
   <section class="page-section" id="list_body">
@@ -73,6 +73,29 @@
       }
     }
 
+    $('.categories a').click(function(e) {
+      e.preventDefault();
+      search($(this).attr('href'));
+    });
+
+    $('.tags a').click(function(e) {
+      e.preventDefault();
+      search($(this).attr('href'));
+    });
+
+    function search(url) {
+      $.ajax (
+        {
+          type: 'GET',
+          url: url,
+          dataType: 'json',
+          success: function(data) {
+            generateContentList(data.articles);
+          },
+        }
+      );
+    }
+
     $('.page_btn').click(function() {
       let lek = {'id': '', 'title': ''};
       var tmp_stack = [];
@@ -104,14 +127,14 @@
           },
           dataType: 'json',
           success: function(data) {
-            generateContentList(data.articles, data.lek, tmp_stack);
+            updatePaginationStack(data.lek, tmp_stack)
+            generateContentList(data.articles);
           },
         }
       );
     });
 
-    function generateContentList(articles, next_lek, tmp_stack) {
-
+    function updatePaginationStack(next_lek, tmp_stack){
       while(tmp_stack.length > 0) {
         pagination_stack.push(tmp_stack.pop());
       }
@@ -129,12 +152,14 @@
       }
 
       pagination_stack.push(next_lek);
+    }
 
+    function generateContentList(articles) {
       var html="<div class='text-center text-primary lead'>No More Content.</div>";
       if (articles.length > 0) {
         html = "<ul>";
         $.each(articles, function(i, a){
-          html+="<li><a href='/mysite/page/" + a.HASH + "'>" + a.RANGE + "</a></li>";
+          html+="<li><a href='/mysite/page/" + a.id + "'>" + a.title + "</a></li>";
         });
         html += "</ul>";
       }

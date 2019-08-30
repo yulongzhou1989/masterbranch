@@ -1,12 +1,12 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse
 from django.template import loader
 from model import UserModel, ArticleModel
 from django.views.decorators.csrf import csrf_protect
-from django.shortcuts import redirect
-import uuid
 from datetime import datetime
 from service import ArticleService
+import uuid
+
 
 
 def admin_index(request):
@@ -36,7 +36,7 @@ def admin_logout(request):
 
 def admin_list(request, last_evaluated_key=None):
     articles = ArticleService.list(model_name='ArticleModel')
-    return render(request, 'admin/list.html', {'articles' : articles['data'], 'lek' : lek['lek']})
+    return render(request, 'admin/list.html', {'articles' : articles['data'], 'lek' : articles['lek']})
 
 def admin_list_pagination(request):
 
