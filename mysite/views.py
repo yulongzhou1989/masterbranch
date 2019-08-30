@@ -10,7 +10,6 @@ def index(request):
 def list(request, last_evaluated_key=None):
     articles = ArticleService.list(model_name='ArticleModel')
     cats = CategoryService.list(model_name='CategoryModel', limit=None)
-    # cats = CategoryService.listCategoryWithCount()
     tags = TagService.list(model_name='TagModel', limit=60)
     return render(request, 'mysite/list.html', {'articles': articles['data'], 'lek': articles['lek'], 'cats': cats['data'], 'tags': tags['data']})
 

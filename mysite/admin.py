@@ -7,8 +7,6 @@ from datetime import datetime
 from service import ArticleService
 import uuid
 
-
-
 def admin_index(request):
     if request.session.get('user_id'):
         return render(request, 'admin/dashboard.html', {})
@@ -99,3 +97,12 @@ def admin_save(request):
             print(str(e))
 
     return redirect('admin_page', id=uid)
+
+@csrf_protect
+def admin_search_keyword(request):
+    keyword = request.POST['keyword']
+    if not keyword:
+        return redirect('/admin/mysite/list/')
+
+    articles = ArticleService.searchArticleByKeyword(keyword)
+    return render(request, 'admin/list.html', {'articles' : articles['data'], 'lek' : articles['lek']})

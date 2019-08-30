@@ -826,3 +826,10 @@
 .documentation .dropdown .dropdown-menu.show {
     transform: translate3d(0, 39px, 0) !important;
 }
+
+.dashboard-search {
+  text-transform: uppercase;
+  line-height: 30px;
+  font-size: 11px;
+  font-weight: 600;
+}

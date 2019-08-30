@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/mysite/page/<str:id>', admin.admin_page, name="admin_page"),
     path('admin/mysite/page/', admin.admin_page, name="admin_page"),
     path('admin/mysite/save', admin.admin_save, name="admin_save"),
+    path('admin/mysite/admin_search', admin.admin_search_keyword, name="admin_search_keyword"),
     path('admin/mysite/list_pagination/', admin.admin_list_pagination, name="admin_list_pagination"),
 ]
