@@ -22,7 +22,7 @@
             </div>
             <!-- end message body -->
             <div class="pt-5">
-              <p>Categories:  <a href="#">Food</a>, <a href="#">Travel</a>  Tags: <a href="#">#manila</a>, <a href="#">#asia</a></p>
+              <p><b>Categories:</b> {% if article.category %} <a href="/list/cat/{{ article.category }}"> {{ article.category }} </a> {% endif %} &nbsp;&nbsp;&nbsp;&nbsp; <b>Tags:</b> {% if article.tags %} {% for tag in article.tags %} <a href="/list/tag/{{ tag }}">{{ tag }}</a>, {% endfor %} {% endif %}</p>
             </div>
             <!-- commnet body -->
             <div class="pt-5 hide">

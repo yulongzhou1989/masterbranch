@@ -1,7 +1,7 @@
 {% load static %}
 <div class="col-md-12 col-lg-4 sidebar">
   <div class="sidebar-box search-form-wrap">
-    <form action="/list_filter/keyword" class="search-form" method="post"> {% csrf_token %}
+    <form action="/list/keyword" class="search-form" method="post"> {% csrf_token %}
       <div class="form-group">
         <input type="text" class="form-control" id="s" placeholder="Type a keyword and hit enter" name="keyword">
       </div>
@@ -13,7 +13,7 @@
     {% if cats %}
     <ul class="categories">
       {% for cat in cats %}
-      <li><a href="/list_filter/cat/{{ cat.category_name }}">{{ cat.category_name }} <span> {% if cat.cnt %} ({{ cat.cnt}}) {% endif %}</span></a></li>
+      <li><a href="/list/cat/{{ cat.category_name }}">{{ cat.category_name }} <span> {% if cat.cnt %} ({{ cat.cnt}}) {% endif %}</span></a></li>
       {% endfor %}
     </ul>
     {% endif %}
@@ -24,7 +24,7 @@
     <ul class="tags">
       {% if tags %}
         {% for tag in tags%}
-        <li><a href="/list_filter/tag/{{ tag.tag_name }}">{{ tag.tag_name }}</a></li>
+        <li><a href="/list/tag/{{ tag.tag_name }}">{{ tag.tag_name }}</a></li>
         {% endfor %}
       {% endif %}
     </ul>
