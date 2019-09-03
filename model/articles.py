@@ -19,3 +19,4 @@ class ArticleModel(BaseModel):
     content = UnicodeAttribute()
     create_time = UnicodeAttribute()
     editor = UnicodeAttribute()
+    tags = ListAttribute(null=True)
