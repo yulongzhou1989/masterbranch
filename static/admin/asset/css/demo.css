@@ -833,3 +833,36 @@
   font-size: 11px;
   font-weight: 600;
 }
+
+/*
+.btn-tag::before, ::after {
+  box-sizing: border-box;
+} */
+
+.fa {
+    font: normal normal normal 14px/1 FontAwesome;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+}
+
+.items-collection{
+    margin:20px 0 20px 0;
+    display: inline;
+    float: left;
+    width: 100%;
+}
+.items-collection label.btn-default.active{
+    background-color:#007ba7;
+    color:#FFF;
+}
+.items-collection label.btn-default{
+    border:1px solid #305891;
+    margin:4px;
+    height: 32px;
+    border-radius: 17px;
+    color: #305891;
+}
+.items-collection label .itemcontent{
+  font-size: 14px;
+}

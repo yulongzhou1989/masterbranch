@@ -19,6 +19,15 @@
                                 <div class="card-body">
                                     <form action="/admin/mysite/save" method="post"> {% csrf_token %}
                                         <input type="text" class="form-control d-none" name="article_id" value="{% if article %}{{ article.id }}{% endif %}">
+                                        {% if status %}
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <label>{{ status }}</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% endif %}
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
@@ -29,32 +38,55 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-5 pr-1">
-                                                <div class="form-group">
-                                                    <label>Category</label>
-                                                    <input type="text" class="form-control" name="category" placeholder="Category" value="{% if article %}{{ article.category }}{% endif %}">
+                                              <!--Dropdown primary-->
+                                              <div class="dropdown">
+                                                <!--Trigger-->
+                                                <button class="btn btn-ins dropdown-toggle" type="button" id="btn-dropdown-category" data-toggle="dropdown"
+                                                  aria-haspopup="true" aria-expanded="false">{% if article %}{{ article.category }} {% else %} - Please Select Category - {% endif %}</button>
+                                                <!--Menu-->
+                                                <div class="dropdown-menu dropdown-ins dropdown-menu-category">
+                                                  {% for cat in cats %}
+                                                  <a class="dropdown-item category-dropdown-item" href="#" cat_name="{{ cat.category_name }}">{{ cat.category_name }}</a>
+                                                  {% endfor %}
                                                 </div>
-                                            </div>
-                                            {% if article %}
-                                            <div class="col-md-4 px-1">
-                                                <div class="form-group">
-                                                    <label>Create Time</label>
-                                                    <input type="text" class="form-control"  disabled="" name="create_time" value="{{ article.create_time }}">
-                                                </div>
-                                            </div>
-                                            {% endif %}
-                                            <div class="col-md-3 pl-1">
-                                                <div class="form-group">
-                                                    <label for="editor">Editor</label>
-                                                    <input type="text" id="editor" class="form-control" name="editor" placeholder="Editor" {% if article %} disabled="" value="{{ article.editor }}" {% else %} value="Yulong" {% endif %} >
-                                                </div>
+                                              </div>
+                                              <input type="text" class="d-none" id="input-category" name="category" placeholder="Category" value="{% if article %}{{ article.category }}{% endif %}">
+                                              <!--/Dropdown primary-->
                                             </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-8 pr-1">
-                                                <div class="form-group">
-                                                    <label>Tags</label>
-                                                    <input type="text" class="form-control" name="tags" placeholder="Tags" value="{% if article %}{{ article.tags }}{% endif %}">
+                                          {% if article.create_time %}
+                                          <div class="col-md-5">
+                                              <div class="form-group">
+                                                  <label>Create Time</label>
+                                                  <input type="text" class="form-control"  disabled="" name="create_time" value="{{ article.create_time }}">
+                                              </div>
+                                          </div>
+                                          {% endif %}
+                                          <div class="col-md-4 pl-1">
+                                              <div class="form-group">
+                                                  <label for="editor">Editor</label>
+                                                  <input type="text" id="editor" class="form-control" name="editor" placeholder="Editor" {% if article %} disabled="" value="{{ article.editor }}" {% else %} value="Yulong" {% endif %} >
+                                              </div>
+                                          </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-11 pr-1">
+                                              <label>Tags</label>
+                                              <div class="form-group">
+                                                <div class="items-collection">
+                                                  <div class="items" data-toggle="buttons">
+                                                  {% for tag in tags %}
+                                                    <label class="btn btn-default btn-tags-{{tag.tag_name}}" tag_name="{{ tag.tag_name }}">
+                                                        <div class="itemcontent">
+                                                            {{ tag.tag_name }}
+                                                        </div>
+                                                    </label>
+                                                  {% endfor %}
+                                                  </div>
                                                 </div>
+                                              </div>
+                                              <input type="text" id="input-tags" class="form-control" name="tags" placeholder="Tags" value="{% if article.tags %}{{ article.tags | join:"," }}{% endif %}">
                                             </div>
                                         </div>
                                         <div class="row">
@@ -84,14 +116,45 @@
     $(document).ready(function() {
         demo.initBgColor();
         $(".li-side-page").addClass('active');
+        $('pre').each(function(i, block) {
+          hljs.highlightBlock(block);
+        });
+        initTagInput();
+    });
+
+    function initTagInput() {
+        var tags = $('#input-tags').val().split(',')
+        $("[class*=btn-tags]").each(function() {
+          if ($.inArray($(this).attr('tag_name'), tags) > -1) {
+            $(this).addClass('active');
+            $(this).attr('aria-pressed', 'true');
+          }
+        });
+    }
+
+    $('.category-dropdown-item').click(function(e) {
+        let selected_cat = $(this).attr('cat_name');
+        $('#input-category').val(selected_cat);
+        $('#btn-dropdown-category').text(selected_cat);
+    });
+
+    $("[class*=btn-tags]").click(function(e) {
+        var clicked_tag = $(this).attr('tag_name');
+        if ($('#input-tags').val().trim() == '') {
+          $('#input-tags').val(clicked_tag);
+          return;
+        }
+        var tags = $('#input-tags').val().split(',');
+        if ($(this).hasClass('active')) {
+          tags = jQuery.grep(tags, function(value) {
+            return value != clicked_tag;
+          })
+        } else {
+          tags.push(clicked_tag);
+        }
+        $('#input-tags').val(tags.join(','));
     });
 
     CKEDITOR.replace( 'content' );
-
-    $(document).ready(function() {
-      $('pre').each(function(i, block) {
-        hljs.highlightBlock(block);
-      });
-    });
 </script>
 </html>

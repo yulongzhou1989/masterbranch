@@ -4,7 +4,7 @@ from django.template import loader
 from model import UserModel, ArticleModel
 from django.views.decorators.csrf import csrf_protect
 from datetime import datetime
-from service import ArticleService
+from service import ArticleService, TagService, CategoryService
 import uuid
 
 def admin_index(request):
@@ -59,11 +59,13 @@ def admin_list_pagination(request):
     return JsonResponse(data)
 
 def admin_page(request, id=None):
+    tags = TagService.list(model_name='TagModel', limit=None)
+    cats = CategoryService.list(model_name='CategoryModel', limit=None)
+    article = {}
     if id:
         article = ArticleService.getByHashKey('ArticleModel', id)
-        return render(request, 'admin/page.html', {'article': article})
-    else:
-        return render(request, 'admin/page.html', {})
+
+    return render(request, 'admin/page.html', {'article': article, 'cats': cats['data'], 'tags': tags['data']})
 
 @csrf_protect
 def admin_save(request):
@@ -75,6 +77,7 @@ def admin_save(request):
                 actions=[
                     ArticleModel.category.set(request.POST['category']),
                     ArticleModel.content.set(request.POST['content']),
+                    ArticleModel.tags.set(request.POST['tags'].split(',')),
                 ],
                 condition=(
                     (ArticleModel.id == request.POST['article_id'])
@@ -89,7 +92,7 @@ def admin_save(request):
                                category=request.POST['category'],
                                content=request.POST['content'],
                                create_time=str(datetime.now()),
-                               editor=request.POST['editor'],
+                               editor=request.POST['editor'].split(','),
                                tags=request.POST['tags'])
         try:
             article.save()
