@@ -14,7 +14,7 @@
                         <div class="col-md-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4 class="card-title">Edit Profile</h4>
+                                    <div class="card-title"><h4>Edit Profile </h4> | <a href="/mysite/page/{% if article %}{{ article.id }}{% endif %}" target="_blank">View Page</a></div>
                                 </div>
                                 <div class="card-body">
                                     <form action="/admin/mysite/save" method="post"> {% csrf_token %}
@@ -63,7 +63,7 @@
                                               </div>
                                           </div>
                                           {% endif %}
-                                          <div class="col-md-4 pl-1">
+                                          <div class="col-md-4">
                                               <div class="form-group">
                                                   <label for="editor">Editor</label>
                                                   <input type="text" id="editor" class="form-control" name="editor" placeholder="Editor" {% if article %} disabled="" value="{{ article.editor }}" {% else %} value="Yulong" {% endif %} >
@@ -71,7 +71,7 @@
                                           </div>
                                         </div>
                                         <div class="row">
-                                            <div class="col-md-11 pr-1">
+                                            <div class="col-md-12">
                                               <label>Tags</label>
                                               <div class="form-group">
                                                 <div class="items-collection">
