@@ -92,8 +92,8 @@ def admin_save(request):
                                category=request.POST['category'],
                                content=request.POST['content'],
                                create_time=str(datetime.now()),
-                               editor=request.POST['editor'].split(','),
-                               tags=request.POST['tags'])
+                               editor=request.POST['editor'],
+                               tags=request.POST['tags'].split(','))
         try:
             article.save()
         except Exception as e:
