@@ -5,7 +5,7 @@
 <body id="page-top">
   {% include "mysite/nav.html" %}
   <section class="listHead listHead-heading bg-primary text-white text-uppercase mb-0 text-center ">
-    <a href="http://localhost:5002/mysite/list/"><div class="ml-4 text-white">blogs</div></a>
+    <a href="/mysite/list/"><div class="ml-4 text-white">blogs</div></a>
   </section>
   <section class="page-section" id="list_body">
     <div class="container">
@@ -143,7 +143,19 @@
     </div>
   </section>
   {% include "mysite/footer.html" %}
+  <!-- Bootstrap core JavaScript -->
   <script src="{% static 'mysite/vendor/jquery/jquery.min.js' %}"></script>
+  <script src="{% static 'mysite/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+
+  <!-- Plugin JavaScript -->
+  <script src="{% static 'mysite/vendor/jquery-easing/jquery.easing.min.js' %}"></script>
+
+  <!-- Contact Form JavaScript -->
+  <script src="{% static 'mysite/js/jqBootstrapValidation.js' %}"></script>
+  <script src="{% static 'mysite/js/contact_me.js' %}"></script>
+
+  <!-- Custom scripts for this template -->
+  <script src="{% static 'mysite/js/freelancer.min.js' %}"></script>
   <script src="{% static 'mysite/js/site.js' %}"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.10/highlight.min.js"></script>
   <script>
