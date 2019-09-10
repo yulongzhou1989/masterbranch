@@ -33,17 +33,17 @@ def admin_logout(request):
     return redirect('admin_index')
 
 def admin_list(request, last_evaluated_key=None):
-    articles = ArticleService.list(model_name='ArticleModel')
+    articles = ArticleService.list(model_name='ArticleModel', limit=5)
     return render(request, 'admin/list.html', {'articles' : articles['data'], 'lek' : articles['lek']})
 
 def admin_list_pagination(request):
-
+    print(request.GET)
     if 'lek_id' in request.GET and request.GET['lek_id']:
         lek = {'id': {'S': request.GET['lek_id']}, 'title': {'S': request.GET['lek_title']}}
     else:
         lek = None
 
-    articles = ArticleService.list(model_name='ArticleModel', last_evaluated_key=lek)
+    articles = ArticleService.list(model_name='ArticleModel', last_evaluated_key=lek, limit=5)
     next_lek = articles['lek']
 
     if next_lek == None:
@@ -52,7 +52,7 @@ def admin_list_pagination(request):
         resp_lek = {'id': next_lek['id']['S'], 'title': next_lek['title']['S']}
 
     data = {
-        'articles': articles,
+        'articles': articles['data'],
         'lek': resp_lek,
     }
 
