@@ -19,29 +19,27 @@
                                     <p class="card-category">tags</p>
                                 </div>
                                 <div class="card-body table-full-width table-responsive">
-                                    <table class="table table-hover table-striped">
+                                    <table class="table table-hover table-striped admin-table">
                                         <thead>
-                                            <th>Title</th>
-                                            <th>Category</th>
-                                            <th>Create Time</th>
-                                            <th>Editor</th>
-                                            <th>Tags</th>
-                                            <th>ID</th>
+                                            <th style="width:30%">Title</th>
+                                            <th style="width:10%">Category</th>
+                                            <th style="width:10%">Create Time</th>
+                                            <th style="width:10%">Editor</th>
+                                            <th style="width:20%">Tags</th>
+                                            <th style="width:20%">ID</th>
                                         </thead>
                                         <tbody id="admin_content_list">
                                             {% if articles %}
-                                                <ul>
-                                                {% for article in articles %}
-                                                  <tr>
-                                                    <td><li><a href="/admin/mysite/page/{{article.id}}">{{ article.title }}</a></li></td>
-                                                    <td>{{ article.category }}</td>
-                                                    <td>{{ article.create_time }}</td>
-                                                    <td>{{ article.editor }}</td>
-                                                    <td>{{ article.tags }}</td>
-                                                    <td>{{ article.id }}</td>
-                                                  </tr>
-                                                {% endfor %}
-                                                </ul>
+                                              {% for article in articles %}
+                                                <tr>
+                                                  <td><li><a href="/admin/mysite/page/{{article.id}}">{{ article.title }}</a></li></td>
+                                                  <td>{{ article.category }}</td>
+                                                  <td>{{ article.create_time }}</td>
+                                                  <td>{{ article.editor }}</td>
+                                                  <td>{{ article.tags }}</td>
+                                                  <td>{{ article.id }}</td>
+                                                </tr>
+                                              {% endfor %}
                                             {% else %}
                                                 <p>No contents are available.</p>
                                             {% endif %}
@@ -148,9 +146,9 @@
           html+="<td>" + a.category +"</td>";
           html+="<td>" + a.create_time + "</td>";
           html+="<td>" + a.editor + "</td>";
-          html+="<td>" + a.tags + "</td>";
+          html+="<td> [" + a.tags + "] </td>";
           html+="<td>" + a.id + "</td>";
-          html += "</tr>";
+          html+="</tr>";
         });
       }
       $('#admin_content_list').html(html);

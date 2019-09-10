@@ -37,7 +37,6 @@ def admin_list(request, last_evaluated_key=None):
     return render(request, 'admin/list.html', {'articles' : articles['data'], 'lek' : articles['lek']})
 
 def admin_list_pagination(request):
-    print(request.GET)
     if 'lek_id' in request.GET and request.GET['lek_id']:
         lek = {'id': {'S': request.GET['lek_id']}, 'title': {'S': request.GET['lek_title']}}
     else:

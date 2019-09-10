@@ -866,3 +866,7 @@
 .items-collection label .itemcontent{
   font-size: 14px;
 }
+
+.admin-table {
+  table-layout: fixed;
+}
