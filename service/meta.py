@@ -2,7 +2,7 @@ import model
 
 class BaseService(object):
 
-    LIMIT = 10
+    LIMIT = 15
 
     def list(model_name, last_evaluated_key=None, limit=LIMIT):
         dataItr = getattr(model, model_name).scan(limit=limit, last_evaluated_key=last_evaluated_key)
