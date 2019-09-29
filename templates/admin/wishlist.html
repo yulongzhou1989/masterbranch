@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+{% include "admin/head.html" %}
+<body>
+    <div class="wrapper">
+        {% include "admin/sidebar.html" %}
+        <div class="main-panel">
+            <!-- Navbar -->
+            {% include "admin/nav.html" %}
+            <!-- End Navbar -->
+            <div class="content">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="card strpied-tabled-with-hover">
+                                <div class="card-header ">
+                                    <h4 class="card-title">Wishes</h4>
+                                    <p class="card-category">top 10 wishes</p>
+                                </div>
+                                <div class="card-body table-full-width table-responsive">
+                                    <table class="table table-hover table-striped admin-table">
+                                        <thead>
+                                            <th style="width:20%">Brief</th>
+                                            <th style="width:15%">Create Time</th>
+                                            <th style="width:10%">Priority</th>
+                                            <th style="width:10%">Time Cost</th>
+                                            <th style="width:20%">Action</th>
+                                            <th style="width:10%">Real Time Cost</th>
+                                            <th style="width:15%">Finish Time</th>
+                                        </thead>
+                                        <tbody id="admin_wish_list">
+                                            {% if wishes %}
+                                              {% for wish in wishes %}
+                                                <tr>
+                                                  <td><li><a href="/wish/page/{{wish.id}}">{{ wish.title }}</a></li></td>
+                                                  <td>{{ wish.create_time }}</td>
+                                                  <td>{{ wish.priority }}</td>
+                                                  <td>{{ wish.timespend }}</td>
+                                                  <td><input type="checkbox" id="checkbox_status" class="checkbox_status" name="status" wishid="{{ wish.id }}"  {% if wish.status|stringformat:"s" == 'off' %} checked {% endif %} data-toggle="toggle" data-on="<i class='fa fa-play'></i> Wish" data-off="<i class='fa fa-pause'></i> Done!" data-size="small"></td>
+                                                  <td>{{ wish.real_time_cost }}</td>
+                                                  <td>{{ wish.finish_time }}</td>
+                                                </tr>
+                                              {% endfor %}
+                                            {% else %}
+                                                <p>No Wish at this time.</p>
+                                            {% endif %}
+                                            <div class="clearfix"></div>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% include "admin/pagination.html" %}
+            </div>
+            {% include "admin/footer.html" %}
+        </div>
+    </div>
+    {% include "admin/fixed_plugin.html" %}
+</body>
+{% include "admin/scripts.html" %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        demo.initBgColor();
+        var url = window.location.href;
+        if ((url.indexOf('?') != -1)) {
+          $(".li-side-wishlist-top").addClass('active');
+        } else {
+          $(".li-side-wishlist").addClass('active');
+        }
+    });
+
+    var wish_pagination_stack = [];
+    if (wish_pagination_stack.length == 0) {
+      if ($('#lek_id').val() == undefined) {
+        $('.pagination-wrapper').addClass('d-none');
+      } else {
+        wish_pagination_stack.push({'id': $('#lek_id').val(), 'title': $('#lek_title').val()});
+        $('.btn--prev').addClass('d-none');
+      }
+    }
+
+    $('.page_btn').click(function() {
+      let lek = {'id': '', 'title': ''};
+      var tmp_stack = [];
+      if ($(this).hasClass('btn--prev')) {
+        for (let i = 0; i < 3; i++) {
+          if (wish_pagination_stack.length >  0) {
+            lek = wish_pagination_stack.pop();
+            if (i == 2) {
+              tmp_stack.push(lek);
+            }
+          } else {
+            lek = {'id': '', 'title': ''}
+            break;
+          }
+        }
+        next = false;
+      } else {
+        lek = wish_pagination_stack.pop();
+        tmp_stack.push(lek);
+      }
+
+      $.ajax (
+        {
+          type: 'GET',
+          url:'/wish/list_pagination',
+          data: {
+            lek_id: lek.id,
+            lek_title: lek.title,
+          },
+          dataType: 'json',
+          success: function(data) {
+            updatePaginationStack(data.lek, tmp_stack)
+            generateContentList(data.articles);
+          },
+        }
+      );
+    });
+
+    function generateContentList(wishes) {
+      var html="";
+      if (wishes.length > 0) {
+        $.each(wishes, function(i, w){
+          html+="<tr>";
+          html+="<td><li><a href='/admin/mysite/wish/" + w.id + "'>" + w.title + "</a></li></td>";
+          html+="<td>" + w.create_time + "</td>";
+          html+="<td>" + a.priority +"</td>";
+          html+="<td>" + a.timespend + "</td>";
+          html+="</tr>";
+        });
+      }
+      $('#admin_wish_list').html(html);
+    }
+
+    function updatePaginationStack(next_lek, tmp_stack){
+      while(tmp_stack.length > 0) {
+        wish_pagination_stack.push(tmp_stack.pop());
+      }
+
+      if (wish_pagination_stack.length == 0) {
+        $('.btn--prev').addClass('d-none');
+      } else {
+        $('.btn--prev').removeClass('d-none');
+      }
+
+      if(next_lek.id == '') {
+        $('.btn--next').addClass('d-none');
+      } else {
+        $('.btn--next').removeClass('d-none');
+      }
+
+      wish_pagination_stack.push(next_lek);
+    }
+
+    $('.checkbox_status').change(function() {
+        $.ajax(
+          {
+            type: 'GET',
+            url:'/wish/change_status',
+            data: {
+              wish_id: $(this).attr('wishid'),
+              status: $(this).prop('checked') ? 'off': 'on',
+            },
+            dataType: 'json',
+          }
+        );
+    });
+</script>
+</html>

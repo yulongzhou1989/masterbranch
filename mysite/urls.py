@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import views, admin
+from . import views, admin, wish
 
 urlpatterns = [
     #mysite
@@ -26,4 +26,10 @@ urlpatterns = [
     path('admin/mysite/save', admin.admin_save, name="admin_save"),
     path('admin/mysite/admin_search', admin.admin_search_keyword, name="admin_search_keyword"),
     path('admin/mysite/list_pagination/', admin.admin_list_pagination, name="admin_list_pagination"),
+
+    path('wish/page', wish.page, name="wish_page"),
+    path('admin/wish/save', wish.save, name="wish_save"),
+    path('wish/page/<str:id>', wish.page, name="wish_page"),
+    path('wish/list/', wish.list, name="wish_list"),
+    path('wish/change_status', wish.change_status, name="wish_change_status"),
 ]
