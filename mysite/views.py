@@ -4,6 +4,10 @@ from django.template import loader
 from service import ArticleService, TagService, CategoryService
 from django.views.decorators.csrf import csrf_protect
 
+def https(request, key):
+    print(key)
+    return render(request, 'mysite/.well-known/acme-challenge/' + key, {})
+
 def index(request):
     return render(request, 'mysite/index.html', {})
 

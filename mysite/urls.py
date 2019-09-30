@@ -32,4 +32,7 @@ urlpatterns = [
     path('wish/page/<str:id>', wish.page, name="wish_page"),
     path('wish/list/', wish.list, name="wish_list"),
     path('wish/change_status', wish.change_status, name="wish_change_status"),
+
+    #https:
+    path('.well-known/acme-challenge/<str:key>', views.https, name="https")
 ]
