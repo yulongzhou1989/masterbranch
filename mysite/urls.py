@@ -31,6 +31,7 @@ urlpatterns = [
     path('admin/wish/save', wish.save, name="wish_save"),
     path('wish/page/<str:id>', wish.page, name="wish_page"),
     path('wish/list/', wish.list, name="wish_list"),
+    path('wish/list_pagination/', wish.list_pagination, name="wish_list_pagination"),
     path('wish/change_status', wish.change_status, name="wish_change_status"),
 
     #https:

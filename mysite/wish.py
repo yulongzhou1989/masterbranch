@@ -16,26 +16,29 @@ def list (request):
 
     return render(request, 'admin/wishlist.html', {'wishes' : wishes.get('data'), 'lek' : wishes.get('lek')})
 
-# def wish_list_pagination(request):
-#     if 'lek_id' in request.GET and request.GET['lek_id']:
-#         lek = {'id': {'S': request.GET['lek_id']}, 'title': {'S': request.GET['lek_title']}}
-#     else:
-#         lek = None
-#
-#     articles = ArticleService.list(model_name='ArticleModel', last_evaluated_key=lek, limit=5)
-#     next_lek = articles['lek']
-#
-#     if next_lek == None:
-#         resp_lek = {'id': '', 'title': ''}
-#     else:
-#         resp_lek = {'id': next_lek['id']['S'], 'title': next_lek['title']['S']}
-#
-#     data = {
-#         'articles': articles['data'],
-#         'lek': resp_lek,
-#     }
-#
-#     return JsonResponse(data)
+def list_pagination(request):
+    print(request)
+    if 'lek_id' in request.GET and request.GET['lek_id']:
+        lek = {'id': {'S': request.GET['lek_id']}}
+    else:
+        lek = None
+
+    wishes = WishService.list(last_evaluated_key=lek, limit=5)
+    next_lek = wishes['lek']
+
+    if next_lek == None:
+        resp_lek = {'id': ''}
+    else:
+        resp_lek = {'id': next_lek['id']['S']}
+
+    data = {
+        'wishes': wishes['data'],
+        'lek': resp_lek,
+    }
+
+    print(resp_lek)
+
+    return JsonResponse(data)
 #
 
 def change_status(request):

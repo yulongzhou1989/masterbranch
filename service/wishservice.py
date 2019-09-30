@@ -40,8 +40,8 @@ class WishService(BaseService):
 
         return {'data': data, 'lek': lek}
 
-    def list(limit):
-        wishes = BaseService.list(model_name='WishModel',limit=limit)
+    def list(limit, last_evaluated_key=None):
+        wishes = BaseService.list(model_name='WishModel',limit=limit, last_evaluated_key=last_evaluated_key)
         for wish in wishes['data']:
             wish['real_time_cost'] = WishService.calDayDiff(wish.get('create_time'), wish.get('finish_time'))
         return wishes

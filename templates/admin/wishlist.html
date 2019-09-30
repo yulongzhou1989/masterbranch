@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+'<!DOCTYPE html>
 <html lang="en">
 {% load static %}
 {% include "admin/head.html" %}
@@ -39,7 +39,7 @@
                                                   <td>{{ wish.timespend }}</td>
                                                   <td><input type="checkbox" id="checkbox_status" class="checkbox_status" name="status" wishid="{{ wish.id }}"  {% if wish.status|stringformat:"s" == 'off' %} checked {% endif %} data-toggle="toggle" data-on="<i class='fa fa-play'></i> Wish" data-off="<i class='fa fa-pause'></i> Done!" data-size="small"></td>
                                                   <td>{{ wish.real_time_cost }}</td>
-                                                  <td>{{ wish.finish_time }}</td>
+                                                  <td>{% if wish.finish_tim %}{{ wish.finish_time }}{% else %} On Going {% endif %}</td>
                                                 </tr>
                                               {% endfor %}
                                             {% else %}
@@ -109,12 +109,11 @@
           url:'/wish/list_pagination',
           data: {
             lek_id: lek.id,
-            lek_title: lek.title,
           },
           dataType: 'json',
           success: function(data) {
             updatePaginationStack(data.lek, tmp_stack)
-            generateContentList(data.articles);
+            generateContentList(data.wishes);
           },
         }
       );
@@ -124,15 +123,21 @@
       var html="";
       if (wishes.length > 0) {
         $.each(wishes, function(i, w){
+          let checked = (w.status == 'off') ? 'checked' : '';
+          let finish_time = w.finish_time ? w.finish_time : 'On Going'
           html+="<tr>";
           html+="<td><li><a href='/admin/mysite/wish/" + w.id + "'>" + w.title + "</a></li></td>";
           html+="<td>" + w.create_time + "</td>";
-          html+="<td>" + a.priority +"</td>";
-          html+="<td>" + a.timespend + "</td>";
+          html+="<td>" + w.priority +"</td>";
+          html+="<td>" + w.timespend + "</td>";
+          html+="<td><input type='checkbox' id='checkbox_status' class='checkbox_status' name='status' wishid='" + w.id +"' " + checked + " data-toggle='toggle' data-on=\"<i class='fa fa-play'></i> Wish\" data-off=\"<i class='fa fa-pause'></i> Done!\" data-size='small'></td>"
+          html+="<td>" + w.real_time_cost + "</td>";
+          html+="<td>" + finish_time + "</td>";
           html+="</tr>";
         });
       }
       $('#admin_wish_list').html(html);
+      $('.checkbox_status').bootstrapToggle()
     }
 
     function updatePaginationStack(next_lek, tmp_stack){
