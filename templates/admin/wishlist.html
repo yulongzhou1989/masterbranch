@@ -37,9 +37,9 @@
                                                   <td>{{ wish.create_time }}</td>
                                                   <td>{{ wish.priority }}</td>
                                                   <td>{{ wish.timespend }}</td>
-                                                  <td><input type="checkbox" id="checkbox_status" class="checkbox_status" name="status" wishid="{{ wish.id }}"  {% if wish.status|stringformat:"s" == 'off' %} checked {% endif %} data-toggle="toggle" data-on="<i class='fa fa-play'></i> Wish" data-off="<i class='fa fa-pause'></i> Done!" data-size="small"></td>
+                                                  <td><input type="checkbox" id="checkbox_{{ wish.id }}"  class="checkbox_status" name="status" wishid="{{ wish.id }}"  {% if wish.status|stringformat:"s" == 'off' %} checked {% endif %} data-toggle="toggle" data-on="<i class='fa fa-play'></i> Wish" data-off="<i class='fa fa-pause'></i> Done!" data-size="small"></td>
                                                   <td>{{ wish.real_time_cost }}</td>
-                                                  <td>{% if wish.finish_tim %}{{ wish.finish_time }}{% else %} On Going {% endif %}</td>
+                                                  <td>{% if wish.finish_time %}{{ wish.finish_time }}{% else %} On Going {% endif %}</td>
                                                 </tr>
                                               {% endfor %}
                                             {% else %}
@@ -126,11 +126,11 @@
           let checked = (w.status == 'off') ? 'checked' : '';
           let finish_time = w.finish_time ? w.finish_time : 'On Going'
           html+="<tr>";
-          html+="<td><li><a href='/admin/mysite/wish/" + w.id + "'>" + w.title + "</a></li></td>";
+          html+="<td><li><a href='/wish/page/" + w.id + "'>" + w.title + "</a></li></td>";
           html+="<td>" + w.create_time + "</td>";
           html+="<td>" + w.priority +"</td>";
           html+="<td>" + w.timespend + "</td>";
-          html+="<td><input type='checkbox' id='checkbox_status' class='checkbox_status' name='status' wishid='" + w.id +"' " + checked + " data-toggle='toggle' data-on=\"<i class='fa fa-play'></i> Wish\" data-off=\"<i class='fa fa-pause'></i> Done!\" data-size='small'></td>"
+          html+="<td><input type='checkbox' id='checkbox_" + w.id +"' class='checkbox_status' name='status' wishid='" + w.id +"' " + checked + " data-toggle=\"toggle\" data-on=\"<i class='fa fa-play'></i> Wish\" data-off=\"<i class='fa fa-pause'></i> Done!\" data-size='small'></td>"
           html+="<td>" + w.real_time_cost + "</td>";
           html+="<td>" + finish_time + "</td>";
           html+="</tr>";
@@ -160,18 +160,19 @@
       wish_pagination_stack.push(next_lek);
     }
 
-    $('.checkbox_status').change(function() {
-        $.ajax(
-          {
-            type: 'GET',
-            url:'/wish/change_status',
-            data: {
-              wish_id: $(this).attr('wishid'),
-              status: $(this).prop('checked') ? 'off': 'on',
-            },
-            dataType: 'json',
-          }
-        );
+    $(document).on('change', '.checkbox_status', function (){
+      $.ajax(
+        {
+          type: 'GET',
+          url:'/wish/change_status',
+          data: {
+            wish_id: $(this).attr('wishid'),
+            status: $(this).prop('checked') ? 'off': 'on',
+          },
+          dataType: 'json',
+        }
+      );
     });
+
 </script>
 </html>

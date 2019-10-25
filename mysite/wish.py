@@ -68,6 +68,7 @@ def save(request):
                     WishModel.priority.set(request.POST['priority']),
                     WishModel.title.set(request.POST['title']),
                     WishModel.timespend.set(request.POST['timespend']),
+                    WishModel.finish_time.set(str(datetime.now()) if request.POST['wish_status'] == 'off' else 'On Going')
                 ],
                 condition=(
                     (WishModel.id == request.POST['wish_id'])

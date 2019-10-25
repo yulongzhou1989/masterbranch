@@ -58,7 +58,7 @@ def admin_list_pagination(request):
     return JsonResponse(data)
 
 def admin_page(request, id=None):
-    tags = TagService.list(model_name='TagModel', limit=None)
+    tags = TagService.list(limit=None)
     cats = CategoryService.list(model_name='CategoryModel', limit=None)
     article = {}
     if id:
